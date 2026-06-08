@@ -4,7 +4,7 @@
 ============================================ */
 
 // ===== CONFIG =====
-const BACKEND = "https://cymorai.onrender.com; // Change to your Render URL
+const BACKEND = "https://cymorai.onrender.com"; // Change to your Render URL
 
 const WELCOME_MESSAGES = [
   "How may I help you today? 😊",

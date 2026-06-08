@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cymor AI — Your Intelligent Assistant</title>
+  <meta name="description" content="Cymor AI — Powered by Groq, Claude & Gemini. Built by Legendary Smiley Cymor." />
+  <meta name="theme-color" content="#0a0a0f" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-inner">
+    <div class="splash-logo">
+      <div class="splash-orb"></div>
+      <span class="splash-c">C</span>
+    </div>
+    <h1 class="splash-title">Cymor AI</h1>
+    <p class="splash-sub">Initializing intelligence...</p>
+    <div class="splash-bar"><div class="splash-progress"></div></div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside id="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-brand">
+      <div class="brand-orb"></div>
+      <span>Cymor AI</span>
+    </div>
+    <button class="sidebar-close" onclick="toggleSidebar()" title="Close">✕</button>
+  </div>
+
+  <button class="new-chat-btn" onclick="startNewChat()">
+    <span>✦</span> New Chat
+  </button>
+
+  <div class="chats-section">
+    <p class="chats-label">Recent Chats</p>
+    <div id="chatList" class="chat-list"></div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="footer-stats" id="footerStats"></div>
+    <div class="sidebar-credit">Built by <strong>Legendary Smiley Cymor</strong><br/>CEO · Cymor Tech Services</div>
+  </div>
+</aside>
+
+<!-- OVERLAY -->
+<div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+
+<!-- MAIN APP -->
+<div id="app" class="app">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()" title="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="topbar-brand">
+      <div class="topbar-orb"></div>
+      <span>Cymor AI</span>
+    </div>
+    <div class="topbar-controls">
+      <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">🌙</button>
+      <div class="model-badge" id="modelBadge">⚡ Groq</div>
+    </div>
+  </header>
+
+  <!-- CHAT AREA -->
+  <main id="chatArea" class="chat-area">
+    <div id="welcomeScreen" class="welcome-screen">
+      <div class="welcome-orb-wrap">
+        <div class="welcome-orb"></div>
+        <div class="welcome-ring"></div>
+      </div>
+      <h2 class="welcome-title">Cymor AI</h2>
+      <p class="welcome-msg" id="welcomeMsg"></p>
+      <div class="welcome-chips">
+        <button class="chip" onclick="sendChip('Write me a poem about Nairobi 🌆')">✍️ Write a poem</button>
+        <button class="chip" onclick="sendChip('Explain quantum computing simply')">🧠 Explain something</button>
+        <button class="chip" onclick="sendChip('/imagine a futuristic Nairobi skyline at night')">🎨 Generate image</button>
+        <button class="chip" onclick="sendChip('Write Python code to scrape a website')">💻 Write code</button>
+        <button class="chip" onclick="sendChip('Give me a business idea for Kenya')">💡 Business idea</button>
+        <button class="chip" onclick="sendChip('Who created you?')">🤖 About Cymor AI</button>
+      </div>
+    </div>
+    <div id="messages" class="messages"></div>
+  </main>
+
+  <!-- INPUT AREA -->
+  <footer class="input-area">
+    <!-- Image preview -->
+    <div id="imagePreview" class="image-preview hidden">
+      <img id="previewImg" src="" alt="preview"/>
+      <button onclick="clearImage()" class="clear-img">✕</button>
+    </div>
+
+    <!-- Model selector -->
+    <div class="model-selector">
+      <button class="model-opt active" data-model="groq" onclick="selectModel(this,'groq')">⚡ Groq</button>
+      <button class="model-opt" data-model="claude" onclick="selectModel(this,'claude')">🧠 Claude</button>
+      <button class="model-opt" data-model="gemini" onclick="selectModel(this,'gemini')">✨ Gemini</button>
+    </div>
+
+    <!-- Style selector (for /imagine) -->
+    <div class="style-selector hidden" id="styleSelector">
+      <span class="style-label">🎨 Style:</span>
+      <select id="imgStyle">
+        <option value="realistic">📸 Realistic</option>
+        <option value="anime">🌸 Anime</option>
+        <option value="sketch">✏️ Sketch</option>
+        <option value="oil">🖌️ Oil Painting</option>
+        <option value="cyberpunk">🌃 Cyberpunk</option>
+        <option value="watercolor">💧 Watercolor</option>
+      </select>
+    </div>
+
+    <div class="input-row">
+      <button class="attach-btn" onclick="document.getElementById('fileInput').click()" title="Upload image">📎</button>
+      <input type="file" id="fileInput" accept="image/*" onchange="handleImageUpload(event)" style="display:none" />
+      <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Voice input">🎙️</button>
+      <textarea
+        id="msgInput"
+        class="msg-input"
+        placeholder="Ask anything... or /imagine a dragon 🐉"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this); checkImagine(this.value)"
+      ></textarea>
+      <button class="send-btn" onclick="sendMessage()" id="sendBtn" title="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="input-hint">Cymor AI · No login required · Built by Legendary Smiley Cymor</div>
+  </footer>
+</div>
+
+<!-- TTS TOGGLE -->
+<button class="tts-fab" id="ttsFab" onclick="toggleTTS()" title="Text to speech">🔊</button>
+
+<script src="app.js"></script>
+</body>
+</html>

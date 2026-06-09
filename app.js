@@ -3,7 +3,7 @@
    All fixes applied
 ═══════════════════════════════════════ */
 
-const BACKEND = "https://your-backend.onrender.com"; // ← CHANGE THIS
+const BACKEND = "https://cymorai.onrender.com"; // ← CHANGE THIS
 
 const WELCOMES = [
   "How may I help you today? 😊",

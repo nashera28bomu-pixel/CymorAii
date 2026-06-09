@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Cymor AI</title>
+<meta name="description" content="Cymor AI — Powered by Groq & Gemini. Built by Legendary Smiley Cymor."/>
+<meta name="theme-color" content="#0a0a0f"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
+<link rel="icon" href="icons/favicon-32.png" type="image/png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-wrap">
+    <div class="sp-orb">
+      <div class="sp-inner"></div>
+      <div class="sp-ring"></div>
+      <div class="sp-dot"></div>
+    </div>
+    <div class="sp-title">Cymor AI</div>
+    <div class="sp-sub">Initializing intelligence...</div>
+    <div class="sp-bar"><div class="sp-prog"></div></div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="overlay" onclick="closeSidebar()"></div>
+
+<!-- APP SHELL -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sb-head">
+      <div class="sb-brand">
+        <div class="sb-orb"></div>
+        <span>Cymor AI</span>
+      </div>
+      <button class="sb-close" onclick="closeSidebar()">✕</button>
+    </div>
+    <button class="new-btn" onclick="newChat()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      New Chat
+    </button>
+    <div class="chats-wrap">
+      <div class="chats-lbl">Recent Chats</div>
+      <div id="chatList"></div>
+    </div>
+    <div class="sb-foot">
+      <div class="sb-stats" id="sbStats"></div>
+      <div class="sb-credit">Built by <strong>Legendary Smiley Cymor</strong><br>CEO · Cymor Tech Services</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- TOPBAR -->
+    <header id="topbar">
+      <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="tb-brand">
+        <div class="tb-orb" id="tbOrb"></div>
+        <span>Cymor AI</span>
+      </div>
+      <div class="tb-right">
+        <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">🌙</button>
+        <div class="model-badge" id="modelBadge">⚡ Groq</div>
+      </div>
+    </header>
+
+    <!-- CHAT WRAPPER -->
+    <div id="chatWrap">
+      <!-- WELCOME -->
+      <div id="welcome">
+        <div class="wlc-orb-wrap">
+          <div class="wlc-orb"></div>
+          <div class="wlc-ring"></div>
+        </div>
+        <h1 class="wlc-title">Cymor AI</h1>
+        <p class="wlc-msg" id="wlcMsg"></p>
+        <div class="chips">
+          <button class="chip" onclick="chip('Write me a poem about Nairobi at night 🌆')">✍️ Write a poem</button>
+          <button class="chip" onclick="chip('Explain quantum computing in simple terms')">🧠 Explain something</button>
+          <button class="chip" onclick="chip('/imagine a futuristic Nairobi skyline at sunset, cyberpunk')">🎨 Generate image</button>
+          <button class="chip" onclick="chip('Write Python code to build a REST API with Flask')">💻 Write code</button>
+          <button class="chip" onclick="chip('Search: top business ideas in Kenya 2025')">🔍 Web search</button>
+          <button class="chip" onclick="chip('Who created you and what can you do?')">🤖 About Cymor AI</button>
+        </div>
+      </div>
+      <!-- MESSAGES -->
+      <div id="msgs"></div>
+    </div>
+
+    <!-- INPUT AREA -->
+    <div id="inputArea">
+      <!-- Image preview -->
+      <div id="imgPreview" class="hidden">
+        <img id="prevImg" src="" alt=""/>
+        <span class="prev-label">Image ready 🖼️</span>
+        <button class="clr-img" onclick="clearImg()" title="Remove image">✕</button>
+      </div>
+
+      <!-- Style row for /imagine -->
+      <div id="styleRow" class="hidden">
+        <span class="style-lbl">🎨 Style:</span>
+        <select id="imgStyle">
+          <option value="realistic">📸 Realistic</option>
+          <option value="anime">🌸 Anime</option>
+          <option value="sketch">✏️ Sketch</option>
+          <option value="oil">🖌️ Oil Painting</option>
+          <option value="cyberpunk">🌃 Cyberpunk</option>
+          <option value="watercolor">💧 Watercolor</option>
+        </select>
+      </div>
+
+      <!-- Input row -->
+      <div class="input-row">
+        <button class="ia-btn" onclick="document.getElementById('fileIn').click()" title="Upload image">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        </button>
+        <input type="file" id="fileIn" accept="image/*" onchange="onImgUpload(event)" style="display:none"/>
+        <button class="ia-btn" id="voiceBtn" onclick="toggleVoice()" title="Voice input">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+        </button>
+        <div class="input-inner">
+          <textarea id="msgInput"
+            placeholder="Ask anything... or /imagine a dragon 🐉&#10;Enter = new line  •  Ctrl+Enter = send"
+            rows="1"
+            onkeydown="onKey(event)"
+            oninput="resize(this);checkImagine(this.value)"></textarea>
+          <div class="input-hint-inline">Enter = new line &nbsp;·&nbsp; Ctrl+Enter = send</div>
+        </div>
+        <button class="send-btn" onclick="send()" title="Send (Ctrl+Enter)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+        </button>
+      </div>
+      <div class="input-footer">Cymor AI · No login required · Built by Legendary Smiley Cymor</div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- INSTALL BANNER -->
+<div id="installBanner">
+  <div class="ib-icon">🚀</div>
+  <div class="ib-text">
+    <strong>Enjoying Cymor AI?</strong>
+    <span>Install it as an app for the best experience!</span>
+  </div>
+  <div class="ib-actions">
+    <button class="ib-install" onclick="installApp()">Install Now</button>
+    <button class="ib-skip" onclick="dismissInstall()">Later</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
